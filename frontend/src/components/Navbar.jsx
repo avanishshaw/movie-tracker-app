@@ -12,36 +12,39 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-800 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex-shrink-0">
-            <RouterLink to="/" className="text-white text-2xl font-bold">
-              Movie Tracker
-            </RouterLink>
-          </div>
-          <div className="flex items-center space-x-4">
-            {isAuthenticated ? (
-              <>
-                <span className="text-gray-300">Welcome, {user?.name}!</span>
-                <button
-                  onClick={handleLogout}
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <RouterLink to="/login" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                  Login
-                </RouterLink>
-                <RouterLink to="/register" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                  Register
-                </RouterLink>
-              </>
-            )}
-          </div>
+    <nav className="bg-gray-800 shadow-md sticky top-0 z-50">
+      {/* This single div is now the flex container, pushing its children to the edges */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        
+        {/* Child 1: Brand */}
+        <div className="flex-shrink-0">
+          <RouterLink to="/" className="text-white text-2xl font-bold">
+            Movie Tracker
+          </RouterLink>
+        </div>
+
+        {/* Child 2: Links */}
+        <div className="flex items-center space-x-4">
+          {isAuthenticated ? (
+            <>
+              <span className="text-gray-300">Welcome, {user?.name}!</span>
+              <button
+                onClick={handleLogout}
+                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <RouterLink to="/login" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                Login
+              </RouterLink>
+              <RouterLink to="/register" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                Register
+              </RouterLink>
+            </>
+          )}
         </div>
       </div>
     </nav>
