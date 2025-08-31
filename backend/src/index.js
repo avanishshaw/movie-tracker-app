@@ -11,21 +11,32 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.js';
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
+if (process.env.NODE_ENV !== 'test') {
+  connectDB();
+}
+
+// Middleware and DB Connection
+// connectDB();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+// Routes
 app.get('/', (req, res) => res.send('API is running...'));
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/media', mediaRoutes);
 app.use('/api/v1/admin', adminRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Only start the server if this file is run directly (not imported)
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+// Export the app for testing
+export default app;

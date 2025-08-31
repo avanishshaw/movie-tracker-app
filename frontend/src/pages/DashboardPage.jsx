@@ -14,6 +14,22 @@ const DashboardPage = () => {
   const queryClient = useQueryClient();
 
   // ... (useInfiniteQuery hook remains the same)
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: ['mediaEntries'],
+    queryFn: getMedia,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < lastPage.pages) {
+        return lastPage.page + 1;
+      }
+      return undefined;
+    },
+  });
 
   // Mutation for creating a new entry
   const createMutation = useMutation({
@@ -59,12 +75,12 @@ const DashboardPage = () => {
               <tr key={entry._id} /* ... */>
                 {/* ... (tds for title, type, etc.) */ }
                 <td className="py-2 px-4">
-                    {/* Conditional Edit/Delete buttons */}
-                    {(user?.role === 'admin' || user?.id === entry.createdBy._id) && (
-                        <button className="text-sm text-blue-600 hover:underline">Edit</button>
-                        // Delete button will go here
-                    )}
-                </td>
+  {/* Conditional Edit/Delete buttons */}
+  {(user?.role === 'admin' || user?.id === entry.createdBy._id) && (
+      <button className="text-sm text-blue-600 hover:underline">Edit</button>
+      // Delete button will go here
+  )}
+</td>
               </tr>
             ))}
           </tbody>
