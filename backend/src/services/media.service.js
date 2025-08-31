@@ -1,4 +1,5 @@
 import MediaEntry from '../models/mediaEntry.model.js';
+import cloudinary from '../config/cloudinary.js';
 
 class ApiError extends Error {
   constructor(statusCode, message) {
@@ -7,8 +8,31 @@ class ApiError extends Error {
   }
 }
 
-const createMedia = async (mediaData, userId) => {
-  const newMedia = new MediaEntry({ ...mediaData, createdBy: userId, status: 'pending' });
+const uploadToCloudinary = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { resource_type: 'image', folder: 'movie-tracker' },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    uploadStream.end(fileBuffer);
+  });
+};
+
+const createMedia = async (mediaData, userId, file) => {
+  const newMediaData = { ...mediaData, createdBy: userId, status: 'pending' };
+
+  if (file) {
+    const uploadResult = await uploadToCloudinary(file.buffer);
+    newMediaData.posterUrl = uploadResult.secure_url;
+    // Cloudinary can create transformations on the fly. We'll store the base URL.
+    // Example for a thumbnail: replace /upload/ with /upload/w_200,h_200,c_fill/
+    newMediaData.thumbnailUrl = uploadResult.secure_url.replace('/upload/', '/upload/c_thumb,w_200,g_face/');
+  }
+
+  const newMedia = new MediaEntry(newMediaData);
   await newMedia.save();
   return newMedia;
 };
