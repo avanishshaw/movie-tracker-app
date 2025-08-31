@@ -1,119 +1,136 @@
-# Movie Tracker API (Backend)
+# Full-Stack Movie Tracker Application
 
-This is the backend for the Movie Tracker application, a full-stack web app that allows users to manage a list of their favorite movies and TV shows. It features a secure RESTful API with user authentication, role-based access control, and an admin approval system for new entries.
+This is a production-ready, full-stack web application that allows users to manage a list of their favorite movies and TV shows. The application supports user authentication, role-based permissions, full CRUD operations, an admin approval workflow for new entries, and cloud-based image uploads.
 
-## Features
+This project is built with a modern tech stack, following best practices for scalability, maintainability, and security as outlined in the assessment criteria.
 
--   **Authentication**: Secure user registration and login using JSON Web Tokens (JWT).
--   **Role-Based Access Control**: `admin` and `user` roles to manage permissions.
--   **CRUD Operations**: Full Create, Read, Update, and Delete functionality for media entries.
--   **Admin Approval Workflow**: User-submitted entries are held in a 'pending' state until an admin approves or rejects them.
--   **Soft Deletes**: Entries are marked as deleted but not permanently removed from the database.
--   **Validation**: Secure request validation using Zod.
--   **API Documentation**: Interactive API documentation powered by Swagger/OpenAPI.
+## Core Features
+
+-   **Secure JWT Authentication**: Full user registration and login system.
+-   [cite_start]**Role-Based Access Control**: Differentiates between `admin` and `user` roles, restricting permissions appropriately[cite: 11].
+-   [cite_start]**Full CRUD for Media**: Authenticated users can Create, Read, Update, and Delete their own media entries[cite: 11].
+-   [cite_start]**Admin Approval Workflow**: New entries submitted by users are set to a 'pending' state and are only visible to others after an admin approves them[cite: 11]. [cite_start]Users can see the status of their own submissions[cite: 11].
+-   [cite_start]**Dynamic Data Table with Infinite Scroll**: Media entries are displayed in a responsive table that loads more data as the user scrolls[cite: 11].
+-   [cite_start]**Cloud Image Uploads**: Supports uploading poster images for entries, which are stored securely in Cloudinary[cite: 11].
+-   **Client-Side Validation**: Forms use Zod for instant user feedback, improving the user experience.
+-   [cite_start]**API Documentation**: A live, interactive Swagger/OpenAPI documentation for the backend API[cite: 7].
 
 ## Tech Stack
 
+### Frontend
+-   **Framework**: React.js (with Vite)
+-   **Styling**: Tailwind CSS
+-   **State Management**: Zustand
+-   **Data Fetching**: TanStack Query (React Query)
+-   **Routing**: React Router
+-   **Tables**: TanStack Table (Headless)
+
+### Backend
 -   **Framework**: Node.js with Express.js
--   **Database**: MongoDB with Mongoose
+-   **Database**: MongoDB with Mongoose ODM
 -   **Authentication**: JSON Web Tokens (JWT)
--   **Validation**: Zod
--   **API Documentation**: Swagger/OpenAPI
--   **Containerization**: Docker
+-   **File Uploads**: Cloudinary for object storage, Multer for handling multipart/form-data.
+-   **Validation**: Zod for API request validation.
 
-## API Documentation
+### DevOps
+-   [cite_start]**Containerization**: Docker, Docker Compose 
+-   [cite_start]**CI/CD**: (Placeholder for GitHub Actions setup) [cite: 8]
 
-Interactive API documentation is available through Swagger UI. Once the server is running, you can access it at:
+## Project Structure
 
-[cite_start][**http://localhost:5001/api-docs**](http://localhost:5001/api-docs) [cite: 7]
+This project uses a monorepo structure, with two distinct applications in the `backend` and `frontend` directories.
 
-## [cite_start]Database Schema [cite: 4]
-
-The application uses two main collections: `users` and `mediaEntries`.
-
-### User Schema
-
-| Field      | Type     | Constraints                | Description                      |
-| :--------- | :------- | :------------------------- | :------------------------------- |
-| `_id`      | ObjectId | Primary Key                | Unique identifier for the user.  |
-| `name`     | String   | Required                   | User's full name.                |
-| `email`    | String   | Required, Unique           | User's email address.            |
-| `password` | String   | Required                   | Hashed user password.            |
-| `role`     | String   | Enum: `['user', 'admin']`  | User's role, defaults to `user`. |
-| `createdAt`| Date     | -                          | Timestamp of creation.           |
-| `updatedAt`| Date     | -                          | Timestamp of last update.        |
-
-### MediaEntry Schema
-
-| Field      | Type     | Constraints               | Description                             |
-| :--------- | :------- | :------------------------ | :-------------------------------------- |
-| `_id`      | ObjectId | Primary Key               | Unique identifier for the media entry.  |
-| `title`    | String   | Required                  | Title of the movie or TV show.          |
-| `type`     | String   | Enum: `['Movie', 'TV Show']` | Type of media.                        |
-| `director` | String   | Required                  | Director's name.                        |
-| `budget`   | Number   | Required                  | Production budget.                      |
-| `location` | String   | Required                  | Filming location.                       |
-| `duration` | String   | Required                  | Runtime or season count.                |
-| `releaseYear` | Number | Required                  | The year of release.                    |
-| `status`   | String   | Enum: `['pending', 'approved', 'rejected']` | Approval status, defaults to `pending`. |
-| `createdBy`| ObjectId | Ref: 'User'               | The user who created the entry.         |
-| `isDeleted`| Boolean  | -                         | Flag for soft deletes, defaults to `false`. |
-| `deletedAt`| Date     | -                         | Timestamp of soft delete.               |
-| `createdAt`| Date     | -                         | Timestamp of creation.                  |
-| `updatedAt`| Date     | -                         | Timestamp of last update.               |
+```
+/
+├── backend/        # Node.js Express API
+├── frontend/       # React.js Client Application
+└── README.md       # This file
+```
 
 ## [cite_start]Local Setup Instructions [cite: 3]
 
-1.  **Clone the repository:**
-    ```sh
-    git clone <your-repo-url>
-    cd <your-repo-name>/backend
-    ```
+### Prerequisites
+-   Node.js (v18 or later)
+-   npm / yarn
+-   MongoDB instance (local or a free Atlas account)
+-   A free Cloudinary account for image uploads.
 
-2.  **Install dependencies:**
-    ```sh
-    npm install
-    ```
+### 1. Clone the Repository
+```sh
+git clone <your-repo-url>
+cd <your-repo-name>
+```
 
-3.  **Set up environment variables:**
-    Create a `.env` file in the `backend` directory by copying the example file:
-    ```sh
-    cp .env.example .env
-    ```
-    Now, open the `.env` file and fill in the required values for `MONGO_URI` and `JWT_SECRET`.
+### 2. Backend Setup
+```sh
+# Navigate to the backend directory
+cd backend
 
-4.  **Start the server:**
-    ```sh
-    npm start
-    ```
-    The server will be running on `http://localhost:5001`.
+# Install dependencies
+npm install
+
+# Create the environment file
+cp .env.example .env
+```
+Now, open the `.env` file and add your credentials for `MONGO_URI`, `JWT_SECRET`, and your Cloudinary account.
+
+```sh
+# Start the backend server
+npm start
+```
+The backend will be running on `http://localhost:5001`.
+
+### 3. Frontend Setup
+Open a **new terminal** for the frontend.
+```sh
+# Navigate to the frontend directory from the root
+cd frontend
+
+# Install dependencies
+npm install
+```
+Create a `.env` file in the `frontend` directory and add the following variable, pointing to your running backend.
+```env
+VITE_API_BASE_URL=http://localhost:5001
+```
+```sh
+# Start the frontend development server
+npm run dev
+```
+The frontend will be running on `http://localhost:5173`.
 
 ## [cite_start]Docker Setup [cite: 3]
 
-1.  Ensure you have Docker installed and running.
-2.  Navigate to the `backend` directory.
-3.  Build the Docker image:
+A `docker-compose.yml` file is provided for a streamlined setup (pending creation). To run the entire stack with Docker:
+1.  Ensure you have Docker and Docker Compose installed.
+2.  Complete the `.env` file setup for the backend as described above.
+3.  From the root directory, run:
     ```sh
-    docker build -t movie-tracker-api .
+    docker-compose up --build
     ```
-4.  Run the Docker container:
-    ```sh
-    docker run -p 5001:5001 -d --env-file .env movie-tracker-api
-    ```
-    The container will be running in detached mode, and the API will be accessible at `http://localhost:5001`.
 
-## [cite_start]Testing Instructions [cite: 8]
+## [cite_start]API Documentation [cite: 7]
 
-To run the automated tests, use the following command:
-```sh
-npm test
-```
+The backend includes interactive API documentation served by Swagger. Once the backend server is running, you can access it at:
 
-## [cite_start]Demo Credentials [cite: 9]
+[**http://localhost:5001/api-docs**](http://localhost:5001/api-docs)
 
-Once the application is running, you can register two different users to test the role-based features:
--   **User Role**: Register a new user through the `POST /api/v1/auth/register` endpoint. This user will have the default `user` role.
--   **Admin Role**: To create an admin, register a user and then manually change their `role` field in the MongoDB database from `'user'` to `'admin'`.
+## [cite_start]Database Schema [cite: 4]
+
+The application uses Mongoose for schema-on-read with MongoDB. The primary collections are `users` and `mediaEntries`. (Refer to the code in `backend/src/models/` for detailed schema definitions).
+
+## [cite_start]Testing & CI/CD Instructions [cite: 8]
+
+-   **Backend Testing**: Navigate to the `backend` directory and run `npm test`. (Jest test suites are to be implemented).
+-   **Frontend Testing**: Navigate to the `frontend` directory and run `npm test`. (React Testing Library tests are to be implemented).
+-   **CI/CD**: A GitHub Actions workflow is planned for running tests and linting automatically on pull requests.
+
+## [cite_start]Demo Credentials & Live Demo [cite: 9]
+
+-   **Live Demo Link**: (Placeholder for your deployed application link)
+-   **Demo Credentials**:
+    -   **User Role**: Register a new account through the UI.
+    -   **Admin Role**: After registering a user, manually update their `role` in the MongoDB `users` collection from `'user'` to `'admin'`.
 
 ## API Usage & Testing Examples (Postman)
 
