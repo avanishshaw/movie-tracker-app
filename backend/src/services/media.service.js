@@ -45,12 +45,21 @@ const getAllMedia = async (user) => {
   return MediaEntry.find(query).populate('createdBy', 'name').sort({ createdAt: -1 });
 };
 
-const updateMedia = async (mediaId, updateData, user) => {
+const updateMedia = async (mediaId, updateData, user, file) => { // <-- ADD file PARAMETER
   const media = await MediaEntry.findById(mediaId);
   if (!media || media.isDeleted) throw new ApiError(404, 'Media entry not found');
+
   if (media.createdBy.toString() !== user.id && user.role !== 'admin') {
     throw new ApiError(403, 'You are not authorized to update this entry');
   }
+
+  // If a new file is uploaded, send it to Cloudinary
+  if (file) {
+    const uploadResult = await uploadToCloudinary(file.buffer);
+    updateData.posterUrl = uploadResult.secure_url;
+    updateData.thumbnailUrl = uploadResult.secure_url.replace('/upload/', '/upload/c_thumb,w_200,g_face/');
+  }
+
   Object.assign(media, updateData);
   await media.save();
   return media;
