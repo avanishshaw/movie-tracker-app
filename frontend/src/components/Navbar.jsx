@@ -13,7 +13,6 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gray-800 shadow-md sticky top-0 z-50  display flex justify-between items-center px-6 h-16">
-      {/* This single div is now the flex container, pushing its children to the edges */}
         
         {/* Child 1: Brand */}
         <div className="flex-shrink-0">

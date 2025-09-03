@@ -6,7 +6,6 @@ export const getMedia = async ({ pageParam = 1 }) => {
   return response.data;
 };
 
-// New function to create a media entry
 export const createMedia = async (formData) => {
   const response = await api.post('/media', formData, {
     headers: {
@@ -16,10 +15,28 @@ export const createMedia = async (formData) => {
   return response.data;
 };
 
-// New function to update a media entry
 export const updateMedia = async ({ id, formData }) => {
-    // Note: We'll need to update the backend to handle file uploads on update too.
-    // For now, this will update text fields.
-    const response = await api.patch(`/media/${id}`, formData);
+    const response = await api.patch(`/media/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+    });
     return response.data;
 }
+
+// NEW: Function to delete a media entry
+export const deleteMedia = async (id) => {
+    const response = await api.delete(`/media/${id}`);
+    return response.data;
+}
+
+export const approveMedia = async (id) => {
+  const response = await api.patch(`/admin/media/${id}/approve`);
+  return response.data;
+};
+
+// NEW: Function to reject a media entry (admin only)
+export const rejectMedia = async (id) => {
+  const response = await api.patch(`/admin/media/${id}/reject`);
+  return response.data;
+};
