@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "start": "nodemon src/index.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "seed": "node src/seed/seeder.js",
+    "seed:destroy": "node src/seed/seeder.js -d"
   },
   "keywords": [],
   "author": "",

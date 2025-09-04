@@ -2,44 +2,33 @@
 import { useState, useEffect } from 'react';
 import { z } from 'zod';
 
-// Zod schema for client-side validation, including all required fields
+// REVERTED: Zod schema now validates 'location'
 const mediaSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  type: z.enum(['Movie', 'TV Show'], { required_error: "Type is required" }),
+  type: z.enum(['Movie', 'TV Show']),
   director: z.string().min(1, "Director is required"),
   budget: z.coerce.number().positive("Budget must be a positive number"),
   location: z.string().min(1, "Location is required"),
   duration: z.string().min(1, "Duration is required"),
-  releaseYear: z.coerce.number().int().min(1888, "Year must be after 1888").max(new Date().getFullYear() + 5, "Year seems too far in the future"),
+  releaseYear: z.coerce.number().int().min(1888, "Year must be after 1888").max(new Date().getFullYear() + 5),
 });
 
 const MediaForm = ({ onSubmit, onCancel, initialData }) => {
-  // State for all form fields
+  // REVERTED: state now uses 'location'
   const [formData, setFormData] = useState({
-    title: '',
-    type: 'Movie',
-    director: '',
-    budget: '',
-    location: '',
-    duration: '',
-    releaseYear: '',
+    title: '', type: 'Movie', director: '', budget: '', location: '', duration: '', releaseYear: '',
   });
   const [errors, setErrors] = useState({});
 
-  // When in "Edit" mode, populate the form with existing data
   useEffect(() => {
     if (initialData) {
       setFormData({
-        title: initialData.title || '',
-        type: initialData.type || 'Movie',
-        director: initialData.director || '',
-        budget: initialData.budget || '',
-        location: initialData.location || '',
-        duration: initialData.duration || '',
-        releaseYear: initialData.releaseYear || '',
+        title: initialData.title || '', type: initialData.type || 'Movie',
+        director: initialData.director || '', budget: initialData.budget || '',
+        location: initialData.location || '', // REVERTED
+        duration: initialData.duration || '', releaseYear: initialData.releaseYear || '',
       });
     } else {
-      // Reset form when opening for "Create"
       setFormData({
         title: '', type: 'Movie', director: '', budget: '', location: '', duration: '', releaseYear: '',
       });
@@ -53,16 +42,15 @@ const MediaForm = ({ onSubmit, onCancel, initialData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors({}); // Clear previous errors
+    setErrors({});
 
     const result = mediaSchema.safeParse(formData);
     if (!result.success) {
-      const fieldErrors = result.error.flatten().fieldErrors;
-      setErrors(fieldErrors);
-      return; // Stop submission if validation fails
+      setErrors(result.error.flatten().fieldErrors);
+      return;
     }
     
-    onSubmit(result.data); // Submit the validated data
+    onSubmit(result.data);
   };
 
   return (
@@ -105,7 +93,7 @@ const MediaForm = ({ onSubmit, onCancel, initialData }) => {
         {errors.releaseYear && <p className="text-red-500 text-xs mt-1">{errors.releaseYear[0]}</p>}
       </div>
       
-      {/* Location */}
+      {/* REVERTED: Back to Location text input */}
       <div className="md:col-span-2">
         <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location</label>
         <input type="text" name="location" id="location" value={formData.location} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />

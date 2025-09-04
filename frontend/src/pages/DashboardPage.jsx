@@ -8,14 +8,17 @@ import MediaForm from '../components/MediaForm';
 import useAuthStore from '../store/authStore';
 
 const DashboardPage = () => {
-  // ... (All the state and mutation hooks at the top of the component remain exactly the same)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
 
   const {
-    data, error, fetchNextPage, hasNextPage, isLoading,
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
   } = useInfiniteQuery({
     queryKey: ['mediaEntries'],
     queryFn: getMedia,
@@ -34,7 +37,9 @@ const DashboardPage = () => {
       handleCloseModal();
     },
     onError: (error) => {
-      alert(error.response?.data?.message || 'Failed to create entry');
+      console.error("Error creating entry:", error.response);
+      const message = error.response?.data?.message || 'Failed to create entry. Check console for details.';
+      alert(message);
     }
   });
 
@@ -45,7 +50,9 @@ const DashboardPage = () => {
       handleCloseModal();
     },
     onError: (error) => {
-      alert(error.response?.data?.message || 'Failed to update entry');
+      console.error("Error updating entry:", error.response);
+      const message = error.response?.data?.message || 'Failed to update entry. Check console for details.';
+      alert(message);
     }
   });
 
@@ -55,7 +62,9 @@ const DashboardPage = () => {
       queryClient.invalidateQueries({ queryKey: ['mediaEntries'] });
     },
     onError: (error) => {
-        alert(error.response?.data?.message || 'Failed to delete entry');
+      console.error("Error deleting entry:", error.response);
+      const message = error.response?.data?.message || 'Failed to delete entry. Check console for details.';
+      alert(message);
     }
   });
 
@@ -65,7 +74,9 @@ const DashboardPage = () => {
       queryClient.invalidateQueries({ queryKey: ['mediaEntries'] });
     },
     onError: (error) => {
-        alert(error.response?.data?.message || 'Failed to approve entry');
+      console.error("Error approving entry:", error.response);
+      const message = error.response?.data?.message || 'Failed to approve entry. Check console for details.';
+      alert(message);
     }
   });
 
@@ -75,7 +86,9 @@ const DashboardPage = () => {
       queryClient.invalidateQueries({ queryKey: ['mediaEntries'] });
     },
     onError: (error) => {
-        alert(error.response?.data?.message || 'Failed to reject entry');
+      console.error("Error rejecting entry:", error.response);
+      const message = error.response?.data?.message || 'Failed to reject entry. Check console for details.';
+      alert(message);
     }
   });
 
@@ -88,7 +101,7 @@ const DashboardPage = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this entry? This action cannot be undone.")) {
+    if (window.confirm("Are you sure you want to delete this entry?")) {
         deleteMutation.mutate(id);
     }
   };
@@ -111,12 +124,28 @@ const DashboardPage = () => {
   const mediaEntries = data?.pages.flatMap(page => page.data) ?? [];
 
   if (isLoading) return <div className="p-8">Loading...</div>;
-  if (error) return <div className="p-8 text-red-500">An error occurred: {error.message}</div>;
-
+  if (error) return <div className="p-8 text-red-500">An error occurred while fetching data. Please check the console.</div>;
 
   return (
     <div className="container mx-auto p-4">
-      {/* ... (Header and Modal are the same) */}
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <button onClick={handleOpenCreateModal} className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+          + Add New Entry
+        </button>
+      </div>
+
+      <Modal 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal} 
+        title={editingEntry ? 'Edit Media Entry' : 'Add New Media Entry'}
+      >
+        <MediaForm
+          onSubmit={handleFormSubmit}
+          onCancel={handleCloseModal}
+          initialData={editingEntry}
+        />
+      </Modal>
 
       {!isLoading && mediaEntries.length === 0 ? (
         <div className="text-center py-20 px-4 bg-white rounded-lg shadow-md mt-4">
@@ -133,7 +162,6 @@ const DashboardPage = () => {
           hasMore={hasNextPage}
           loader={<h4 className="text-center my-4">Loading more...</h4>}
         >
-          {/* CHANGE #1: Added the "table-fixed" class to the table */}
           <table className="min-w-full bg-white border border-gray-200 table-fixed">
             <thead className="bg-gray-800 text-white">
               <tr>
@@ -148,7 +176,6 @@ const DashboardPage = () => {
             <tbody>
               {mediaEntries.map((entry) => (
                 <tr key={entry._id} className="border-b hover:bg-gray-100">
-                  {/* CHANGE #2: Added '|| "-"' to each cell to show a placeholder if data is missing */}
                   <td className="py-2 px-4 truncate">{entry.title || '-'}</td>
                   <td className="py-2 px-4">{entry.type || '-'}</td>
                   <td className="py-2 px-4 truncate">{entry.director || '-'}</td>
@@ -159,11 +186,23 @@ const DashboardPage = () => {
                       entry.status === 'pending' ? 'bg-yellow-200 text-yellow-800' :
                       'bg-red-200 text-red-800'
                     }`}>
-                      {entry.status || 'unknown'}
+                      {entry.status}
                     </span>
                   </td>
                   <td className="py-2 px-4 space-x-2">
-                    {/* ... (Actions logic is the same) */}
+                    {user?.role === 'admin' && entry.status === 'pending' ? (
+                      <>
+                        <button onClick={() => approveMutation.mutate(entry._id)} className="text-sm text-green-600 hover:underline">Approve</button>
+                        <button onClick={() => rejectMutation.mutate(entry._id)} className="text-sm text-red-600 hover:underline">Reject</button>
+                      </>
+                    ) : (
+                      (user?.role === 'admin' || user?.id === entry.createdBy?._id) && (
+                        <>
+                          <button onClick={() => handleOpenEditModal(entry)} className="text-sm text-blue-600 hover:underline">Edit</button>
+                          <button onClick={() => handleDelete(entry._id)} className="text-sm text-red-600 hover:underline">Delete</button>
+                        </>
+                      )
+                    )}
                   </td>
                 </tr>
               ))}
