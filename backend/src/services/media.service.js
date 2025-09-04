@@ -1,5 +1,4 @@
 import MediaEntry from '../models/mediaEntry.model.js';
-import cloudinary from '../config/cloudinary.js';
 
 class ApiError extends Error {
   constructor(statusCode, message) {
@@ -8,29 +7,13 @@ class ApiError extends Error {
   }
 }
 
-const uploadToCloudinary = (fileBuffer) => {
-  return new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      { resource_type: 'image', folder: 'movie-tracker' },
-      (error, result) => {
-        if (error) reject(error);
-        else resolve(result);
-      }
-    );
-    uploadStream.end(fileBuffer);
-  });
-};
-
-const createMedia = async (mediaData, userId, file) => {
-  const newMediaData = { ...mediaData, createdBy: userId, status: 'pending' };
-
-  if (file) {
-    const uploadResult = await uploadToCloudinary(file.buffer);
-    newMediaData.posterUrl = uploadResult.secure_url;
-    // Cloudinary can create transformations on the fly. We'll store the base URL.
-    // Example for a thumbnail: replace /upload/ with /upload/w_200,h_200,c_fill/
-    newMediaData.thumbnailUrl = uploadResult.secure_url.replace('/upload/', '/upload/c_thumb,w_200,g_face/');
-  }
+const createMedia = async (mediaData, userId) => { // UPDATED: Removed 'file' parameter
+  const newMediaData = {
+    ...mediaData,
+    createdBy: userId,
+    status: 'pending',
+  };
+  // All file upload logic is removed.
 
   const newMedia = new MediaEntry(newMediaData);
   await newMedia.save();
@@ -45,7 +28,7 @@ const getAllMedia = async (user) => {
   return MediaEntry.find(query).populate('createdBy', 'name').sort({ createdAt: -1 });
 };
 
-const updateMedia = async (mediaId, updateData, user, file) => { // <-- ADD file PARAMETER
+const updateMedia = async (mediaId, updateData, user) => { // UPDATED: Removed 'file' parameter
   const media = await MediaEntry.findById(mediaId);
   if (!media || media.isDeleted) throw new ApiError(404, 'Media entry not found');
 
@@ -53,13 +36,7 @@ const updateMedia = async (mediaId, updateData, user, file) => { // <-- ADD file
     throw new ApiError(403, 'You are not authorized to update this entry');
   }
 
-  // If a new file is uploaded, send it to Cloudinary
-  if (file) {
-    const uploadResult = await uploadToCloudinary(file.buffer);
-    updateData.posterUrl = uploadResult.secure_url;
-    updateData.thumbnailUrl = uploadResult.secure_url.replace('/upload/', '/upload/c_thumb,w_200,g_face/');
-  }
-
+  // All file upload logic is removed.
   Object.assign(media, updateData);
   await media.save();
   return media;

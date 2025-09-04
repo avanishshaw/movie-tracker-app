@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { z } from 'zod';
 
-// Zod schema for client-side validation, matching our backend model
+// Zod schema for client-side validation, including all required fields
 const mediaSchema = z.object({
   title: z.string().min(1, "Title is required"),
   type: z.enum(['Movie', 'TV Show'], { required_error: "Type is required" }),
@@ -14,6 +14,7 @@ const mediaSchema = z.object({
 });
 
 const MediaForm = ({ onSubmit, onCancel, initialData }) => {
+  // State for all form fields
   const [formData, setFormData] = useState({
     title: '',
     type: 'Movie',
@@ -23,7 +24,6 @@ const MediaForm = ({ onSubmit, onCancel, initialData }) => {
     duration: '',
     releaseYear: '',
   });
-  const [poster, setPoster] = useState(null);
   const [errors, setErrors] = useState({});
 
   // When in "Edit" mode, populate the form with existing data
@@ -38,6 +38,11 @@ const MediaForm = ({ onSubmit, onCancel, initialData }) => {
         duration: initialData.duration || '',
         releaseYear: initialData.releaseYear || '',
       });
+    } else {
+      // Reset form when opening for "Create"
+      setFormData({
+        title: '', type: 'Movie', director: '', budget: '', location: '', duration: '', releaseYear: '',
+      });
     }
   }, [initialData]);
 
@@ -46,31 +51,18 @@ const MediaForm = ({ onSubmit, onCancel, initialData }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e) => {
-    setPoster(e.target.files[0]);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({}); // Clear previous errors
 
-    // Validate form data with Zod
     const result = mediaSchema.safeParse(formData);
     if (!result.success) {
-      // Zod provides detailed errors for each field
       const fieldErrors = result.error.flatten().fieldErrors;
       setErrors(fieldErrors);
       return; // Stop submission if validation fails
     }
-
-    // If validation passes, create FormData to send to the backend
-    const data = new FormData();
-    Object.keys(result.data).forEach(key => data.append(key, result.data[key]));
-    if (poster) {
-      data.append('poster', poster);
-    }
-
-    onSubmit(data);
+    
+    onSubmit(result.data); // Submit the validated data
   };
 
   return (
@@ -127,14 +119,8 @@ const MediaForm = ({ onSubmit, onCancel, initialData }) => {
         {errors.duration && <p className="text-red-500 text-xs mt-1">{errors.duration[0]}</p>}
       </div>
 
-      {/* File Input */}
-      <div className="md:col-span-2">
-          <label htmlFor="poster" className="block text-sm font-medium text-gray-700">Poster Image</label>
-          <input type="file" name="poster" id="poster" onChange={handleFileChange} className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
-      </div>
-
       {/* Action Buttons */}
-      <div className="md:col-span-2 flex justify-end space-x-4 pt-4">
+      <div className="md:col-span-2 flex justify-end space-x-4 pt-4 border-t mt-4">
         <button type="button" onClick={onCancel} className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300">Cancel</button>
         <button type="submit" className="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Save</button>
       </div>

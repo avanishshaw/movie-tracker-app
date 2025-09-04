@@ -6,21 +6,13 @@ export const getMedia = async ({ pageParam = 1 }) => {
   return response.data;
 };
 
-export const createMedia = async (formData) => {
-  const response = await api.post('/media', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+export const createMedia = async (mediaData) => {
+  const response = await api.post('/media', mediaData);
   return response.data;
 };
 
-export const updateMedia = async ({ id, formData }) => {
-    const response = await api.patch(`/media/${id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-    });
+export const updateMedia = async ({ id, mediaData }) => {
+    const response = await api.patch(`/media/${id}`, mediaData);
     return response.data;
 }
 

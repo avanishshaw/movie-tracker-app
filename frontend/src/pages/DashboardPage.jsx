@@ -92,11 +92,11 @@ const DashboardPage = () => {
     }
   });
 
-  const handleFormSubmit = (formData) => {
+  const handleFormSubmit = (mediaData) => { // The parameter is now a plain object
     if (editingEntry) {
-      updateMutation.mutate({ id: editingEntry._id, formData });
+      updateMutation.mutate({ id: editingEntry._id, mediaData });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(mediaData);
     }
   };
   
