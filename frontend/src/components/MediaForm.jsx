@@ -95,7 +95,7 @@ const MediaForm = ({ onSubmit, onCancel, initialData }) => {
       
       {/* REVERTED: Back to Location text input */}
       <div className="md:col-span-2">
-        <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location</label>
+        <label htmlFor="industry" className="block text-sm font-medium text-gray-700">Industry</label>
         <input type="text" name="location" id="location" value={formData.location} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
         {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location[0]}</p>}
       </div>
