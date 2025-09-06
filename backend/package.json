@@ -6,6 +6,13 @@
   "scripts": {
     "start": "nodemon src/index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --detectOpenHandles",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --detectOpenHandles",
+    "test:auth": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/auth.test.js --detectOpenHandles",
+    "test:media": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/media.test.js --detectOpenHandles",
+    "test:user": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/user.test.js --detectOpenHandles",
+    "test:admin": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/admin.test.js --detectOpenHandles",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/integration.test.js --detectOpenHandles",
     "seed": "node src/seed/seeder.js",
     "seed:destroy": "node src/seed/seeder.js -d"
   },
