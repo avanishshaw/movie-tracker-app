@@ -25,7 +25,7 @@ const HomePage = () => {
               {isAuthenticated ? (
                 <Link
                   to="/dashboard"
-                  className="btn-base bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 px-6 rounded-xl py-3 text-lg"
+                  className="btn-base bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 px-8 rounded-xl py-3 text-xl"
                 >
                   🎬 Go to Dashboard
                 </Link>
