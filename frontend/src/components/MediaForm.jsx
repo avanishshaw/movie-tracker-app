@@ -54,63 +54,144 @@ const MediaForm = ({ onSubmit, onCancel, initialData }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {/* Title */}
-      <div className="md:col-span-2">
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
-        <input type="text" name="title" id="title" value={formData.title} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
-        {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title[0]}</p>}
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Title */}
+        <div className="md:col-span-2">
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+            Title *
+          </label>
+          <input 
+            type="text" 
+            name="title" 
+            id="title" 
+            value={formData.title} 
+            onChange={handleChange} 
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus-ring transition-colors duration-200"
+            placeholder="Enter movie or TV show title"
+          />
+          {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title[0]}</p>}
+        </div>
 
-      {/* Type */}
-      <div>
-        <label htmlFor="type" className="block text-sm font-medium text-gray-700">Type</label>
-        <select name="type" id="type" value={formData.type} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-          <option>Movie</option>
-          <option>TV Show</option>
-        </select>
-        {errors.type && <p className="text-red-500 text-xs mt-1">{errors.type[0]}</p>}
-      </div>
+        {/* Type */}
+        <div>
+          <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
+            Type *
+          </label>
+          <select 
+            name="type" 
+            id="type" 
+            value={formData.type} 
+            onChange={handleChange} 
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus-ring transition-colors duration-200"
+          >
+            <option value="Movie">🎬 Movie</option>
+            <option value="TV Show">📺 TV Show</option>
+          </select>
+          {errors.type && <p className="text-red-500 text-sm mt-1">{errors.type[0]}</p>}
+        </div>
 
-      {/* Director */}
-      <div>
-        <label htmlFor="director" className="block text-sm font-medium text-gray-700">Director</label>
-        <input type="text" name="director" id="director" value={formData.director} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
-        {errors.director && <p className="text-red-500 text-xs mt-1">{errors.director[0]}</p>}
-      </div>
-      
-      {/* Budget */}
-      <div>
-        <label htmlFor="budget" className="block text-sm font-medium text-gray-700">Budget ($)</label>
-        <input type="number" name="budget" id="budget" value={formData.budget} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
-        {errors.budget && <p className="text-red-500 text-xs mt-1">{errors.budget[0]}</p>}
-      </div>
+        {/* Director */}
+        <div>
+          <label htmlFor="director" className="block text-sm font-medium text-gray-700 mb-2">
+            Director *
+          </label>
+          <input 
+            type="text" 
+            name="director" 
+            id="director" 
+            value={formData.director} 
+            onChange={handleChange} 
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus-ring transition-colors duration-200"
+            placeholder="Enter director name"
+          />
+          {errors.director && <p className="text-red-500 text-sm mt-1">{errors.director[0]}</p>}
+        </div>
+        
+        {/* Budget */}
+        <div>
+          <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">
+            Budget ($) *
+          </label>
+          <input 
+            type="number" 
+            name="budget" 
+            id="budget" 
+            value={formData.budget} 
+            onChange={handleChange} 
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus-ring transition-colors duration-200"
+            placeholder="Enter budget amount"
+          />
+          {errors.budget && <p className="text-red-500 text-sm mt-1">{errors.budget[0]}</p>}
+        </div>
 
-      {/* Release Year */}
-      <div>
-        <label htmlFor="releaseYear" className="block text-sm font-medium text-gray-700">Release Year</label>
-        <input type="number" name="releaseYear" id="releaseYear" value={formData.releaseYear} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
-        {errors.releaseYear && <p className="text-red-500 text-xs mt-1">{errors.releaseYear[0]}</p>}
-      </div>
-      
-      {/* REVERTED: Back to Location text input */}
-      <div className="md:col-span-2">
-        <label htmlFor="industry" className="block text-sm font-medium text-gray-700">Industry</label>
-        <input type="text" name="location" id="location" value={formData.location} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
-        {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location[0]}</p>}
-      </div>
-      
-      {/* Duration */}
-      <div className="md:col-span-2">
-        <label htmlFor="duration" className="block text-sm font-medium text-gray-700">Duration (e.g., "150 min" or "3 Seasons")</label>
-        <input type="text" name="duration" id="duration" value={formData.duration} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
-        {errors.duration && <p className="text-red-500 text-xs mt-1">{errors.duration[0]}</p>}
+        {/* Release Year */}
+        <div>
+          <label htmlFor="releaseYear" className="block text-sm font-medium text-gray-700 mb-2">
+            Release Year *
+          </label>
+          <input 
+            type="number" 
+            name="releaseYear" 
+            id="releaseYear" 
+            value={formData.releaseYear} 
+            onChange={handleChange} 
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus-ring transition-colors duration-200"
+            placeholder="Enter release year"
+          />
+          {errors.releaseYear && <p className="text-red-500 text-sm mt-1">{errors.releaseYear[0]}</p>}
+        </div>
+        
+        {/* Industry */}
+        <div className="md:col-span-2">
+          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+            Industry *
+          </label>
+          <input 
+            type="text" 
+            name="location" 
+            id="location" 
+            value={formData.location} 
+            onChange={handleChange} 
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus-ring transition-colors duration-200"
+            placeholder="Enter industry (e.g., Hollywood, Bollywood, etc.)"
+          />
+          {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location[0]}</p>}
+        </div>
+        
+        {/* Duration */}
+        <div className="md:col-span-2">
+          <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
+            Duration *
+          </label>
+          <input 
+            type="text" 
+            name="duration" 
+            id="duration" 
+            value={formData.duration} 
+            onChange={handleChange} 
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus-ring transition-colors duration-200"
+            placeholder="e.g., '150 min' or '3 Seasons'"
+          />
+          {errors.duration && <p className="text-red-500 text-sm mt-1">{errors.duration[0]}</p>}
+        </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="md:col-span-2 flex justify-end space-x-4 pt-4 border-t mt-4">
-        <button type="button" onClick={onCancel} className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300">Cancel</button>
-        <button type="submit" className="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Save</button>
+      <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+        <button 
+          type="button" 
+          onClick={onCancel} 
+          className="btn-base border border-gray-300 text-gray-700 hover:bg-gray-50"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          className="btn-base bg-blue-600 text-white hover:bg-blue-700"
+        >
+          {initialData ? 'Update Entry' : 'Create Entry'}
+        </button>
       </div>
     </form>
   );

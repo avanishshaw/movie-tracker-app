@@ -12,37 +12,66 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-800 shadow-md sticky top-0 z-50  display flex justify-between items-center px-6 h-16">
-        
-        {/* Child 1: Brand */}
-        <div className="flex-shrink-0">
-          <RouterLink to="/" className="text-white text-2xl font-bold">
-            Movie Tracker
-          </RouterLink>
-        </div>
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Brand */}
+          <div className="flex-shrink-0">
+            <RouterLink 
+              to="/" 
+              className="text-2xl font-bold gradient-text hover:scale-105 transition-transform duration-200"
+            >
+              🎬 CinemaTracker
+            </RouterLink>
+          </div>
 
-        {/* Child 2: Links */}
-        <div className="flex items-center space-x-4">
-          {isAuthenticated ? (
-            <>
-              <span className="text-gray-300">Welcome, {user?.name}!</span>
-              <button
-                onClick={handleLogout}
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <RouterLink to="/login" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                Login
-              </RouterLink>
-              <RouterLink to="/register" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                Register
-              </RouterLink>
-            </>
-          )}
+          {/* Navigation Links */}
+          <div className="flex items-center space-x-1">
+            {isAuthenticated ? (
+              <>
+                <RouterLink
+                  to="/dashboard"
+                  className="btn-base text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+                >
+                  Dashboard
+                </RouterLink>
+                <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-gray-200">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">
+                        {user?.name?.charAt(0)?.toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="text-sm font-medium text-gray-700 hidden sm:block">
+                      {user?.name}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="btn-base text-gray-600 hover:text-red-600 hover:bg-red-50"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <RouterLink
+                  to="/login"
+                  className="btn-base text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+                >
+                  Sign In
+                </RouterLink>
+                <RouterLink
+                  to="/register"
+                  className="btn-base bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+                >
+                  Get Started
+                </RouterLink>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </nav>
   );
