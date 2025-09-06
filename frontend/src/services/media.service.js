@@ -1,4 +1,5 @@
 // In backend/src/services/media.service.js
+import api from './api';
 
 // Change the getAllMedia function to this:
 const getAllMedia = async (user, queryOptions) => {
@@ -20,4 +21,17 @@ const getAllMedia = async (user, queryOptions) => {
 
   return { data: mediaEntries, page: Number(page), pages: Math.ceil(total / limit) };
 };
-// Make sure to update the controller to pass req.query to the service.
+
+export const getMedia = async ({ pageParam = 1, queryKey }) => {
+  const [_, filters] = queryKey; // React Query passes the queryKey to the queryFn
+  
+  // Create query parameters from the filters object
+  const params = new URLSearchParams({
+    page: pageParam,
+    limit: 10,
+    ...filters,
+  });
+
+  const response = await api.get(`/media?${params.toString()}`);
+  return response.data;
+};

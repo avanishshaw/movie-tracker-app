@@ -20,14 +20,39 @@ const createMedia = async (mediaData, userId) => { // UPDATED: Removed 'file' pa
   return newMedia;
 };
 
-const getAllMedia = async (user) => {
+const getAllMedia = async (user, queryOptions) => {
+  const { page = 1, limit = 10, search, type, industry } = queryOptions;
+  const skip = (page - 1) * limit;
+
   let query = { isDeleted: false };
+
+  // --- FILTERING AND SEARCH LOGIC ---
   if (user.role !== 'admin') {
     query.$or = [{ status: 'approved' }, { createdBy: user._id }];
   }
-  return MediaEntry.find(query).populate('createdBy', 'name').sort({ createdAt: -1 });
-};
+  if (search) {
+    // Using a text index for search (ensure you have it in your schema)
+    // mediaEntrySchema.index({ title: 'text', director: 'text' });
+    query.$text = { $search: search };
+  }
+  if (type) {
+    query.type = type;
+  }
+  if (industry) {
+    query.location = industry;
+  }
+  // --- END OF LOGIC ---
 
+  const mediaEntries = await MediaEntry.find(query)
+    .populate('createdBy', 'name')
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(Number(limit));
+  
+  const total = await MediaEntry.countDocuments(query);
+
+  return { data: mediaEntries, page: Number(page), pages: Math.ceil(total / limit) };
+};
 const updateMedia = async (mediaId, updateData, user) => { // UPDATED: Removed 'file' parameter
   const media = await MediaEntry.findById(mediaId);
   if (!media || media.isDeleted) throw new ApiError(404, 'Media entry not found');

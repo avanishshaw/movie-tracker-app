@@ -2,16 +2,25 @@
 import { useState } from 'react';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getMedia, createMedia, updateMedia, deleteMedia, approveMedia, rejectMedia } from '../services/mediaService';
+import FilterBar from '../components/FilterBar';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Modal from '../components/Modal';
 import MediaForm from '../components/MediaForm';
 import useAuthStore from '../store/authStore';
+import { useEffect } from 'react';
 
 const DashboardPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
+
+  const [filters, setFilters] = useState({
+    search: '',
+    type: '',
+    industry: '',
+  });
+
 
   const {
     data,
@@ -21,7 +30,7 @@ const DashboardPage = () => {
     isLoading,
   } = useInfiniteQuery({
     queryKey: ['mediaEntries'],
-    queryFn: getMedia,
+    queryFn: ({ pageParam }) => getMedia({ pageParam }),
     getNextPageParam: (lastPage) => {
       if (lastPage.page < lastPage.pages) {
         return lastPage.page + 1;
@@ -29,6 +38,8 @@ const DashboardPage = () => {
       return undefined;
     },
   });
+
+
 
   const createMutation = useMutation({
     mutationFn: createMedia,
@@ -102,7 +113,7 @@ const DashboardPage = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this entry?")) {
-        deleteMutation.mutate(id);
+      deleteMutation.mutate(id);
     }
   };
 
@@ -110,7 +121,7 @@ const DashboardPage = () => {
     setEditingEntry(entry);
     setIsModalOpen(true);
   };
-  
+
   const handleOpenCreateModal = () => {
     setEditingEntry(null);
     setIsModalOpen(true);
@@ -121,7 +132,20 @@ const DashboardPage = () => {
     setEditingEntry(null);
   };
 
-  const mediaEntries = data?.pages.flatMap(page => page.data) ?? [];
+  const allMediaEntries = data?.pages.flatMap(page => page.data) ?? [];
+  
+  // Client-side filtering
+  const mediaEntries = allMediaEntries.filter(entry => {
+    const matchesSearch = !filters.search || 
+      entry.title?.toLowerCase().includes(filters.search.toLowerCase()) ||
+      entry.director?.toLowerCase().includes(filters.search.toLowerCase());
+    
+    const matchesType = !filters.type || entry.type === filters.type;
+    
+    const matchesIndustry = !filters.industry || entry.location === filters.industry;
+    
+    return matchesSearch && matchesType && matchesIndustry;
+  });
 
   if (isLoading) return <div className="p-8">Loading...</div>;
   if (error) return <div className="p-8 text-red-500">An error occurred while fetching data. Please check the console.</div>;
@@ -135,9 +159,11 @@ const DashboardPage = () => {
         </button>
       </div>
 
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={handleCloseModal} 
+      <FilterBar filters={filters} setFilters={setFilters} allMediaEntries={allMediaEntries} />
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
         title={editingEntry ? 'Edit Media Entry' : 'Add New Media Entry'}
       >
         <MediaForm
@@ -169,6 +195,7 @@ const DashboardPage = () => {
                 <th className="py-2 px-4 text-left w-1/6">Type</th>
                 <th className="py-2 px-4 text-left w-1/4">Director</th>
                 <th className="py-2 px-4 text-left w-1/12">Year</th>
+                <th className="py-2 px-4 text-left w-1/6">Industry</th>
                 <th className="py-2 px-4 text-left w-1/6">Status</th>
                 <th className="py-2 px-4 text-left">Actions</th>
               </tr>
@@ -180,12 +207,12 @@ const DashboardPage = () => {
                   <td className="py-2 px-4">{entry.type || '-'}</td>
                   <td className="py-2 px-4 truncate">{entry.director || '-'}</td>
                   <td className="py-2 px-4">{entry.releaseYear || '-'}</td>
+                  <td className="py-2 px-4">{entry.location || '-'}</td>
                   <td className="py-2 px-4">
-                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      entry.status === 'approved' ? 'bg-green-200 text-green-800' :
-                      entry.status === 'pending' ? 'bg-yellow-200 text-yellow-800' :
-                      'bg-red-200 text-red-800'
-                    }`}>
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${entry.status === 'approved' ? 'bg-green-200 text-green-800' :
+                        entry.status === 'pending' ? 'bg-yellow-200 text-yellow-800' :
+                          'bg-red-200 text-red-800'
+                      }`}>
                       {entry.status}
                     </span>
                   </td>

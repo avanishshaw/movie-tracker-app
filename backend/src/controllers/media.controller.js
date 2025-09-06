@@ -18,8 +18,8 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const mediaEntries = await mediaService.getAllMedia(req.user);
-    res.status(200).json({ success: true, data: mediaEntries });
+    const result = await mediaService.getAllMedia(req.user, req.query);
+    res.status(200).json(result); 
   } catch (error) { handleErrors(error, res); }
 };
 
@@ -58,5 +58,7 @@ const getPending = async (req, res) => {
         res.status(200).json({ success: true, data: pendingMedia });
     } catch (error) { handleErrors(error, res); }
 };
+
+
 
 export { create, getAll, update, deleteEntry, approveMedia, rejectMedia, getPending };
