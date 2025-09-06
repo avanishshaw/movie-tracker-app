@@ -1,161 +1,175 @@
-# Full-Stack Movie Tracker Application
+# Full-Stack Movie & TV Show Tracker
 
-This is a production-ready, full-stack web application that allows users to manage a list of their favorite movies and TV shows. The application supports user authentication, role-based permissions, full CRUD operations, an admin approval workflow for new entries, and cloud-based image uploads.
+This is a production-ready, full-stack web application designed to allow users to manage a curated list of their favorite movies and TV shows.  
+The application is built with a modern tech stack and follows industry best practices for scalability, security, and maintainability.
 
-This project is built with a modern tech stack, following best practices for scalability, maintainability, and security as outlined in the assessment criteria.
+### 🔗 Important Links
 
-## Core Features
+- **Frontend**: [https://movie-tracker-app-roan.vercel.app/](https://movie-tracker-app-roan.vercel.app/)
+- **Backend API**: [Add your backend API URL here]
+- **GitHub Repository**: [https://github.com/avanishshaw/movie-tracker-app](https://github.com/avanishshaw/movie-tracker-app)
+- **API Documentation**: [Add your Swagger docs URL here]
 
--   **Secure JWT Authentication**: Full user registration and login system.
--   [cite_start]**Role-Based Access Control**: Differentiates between `admin` and `user` roles, restricting permissions appropriately[cite: 11].
--   [cite_start]**Full CRUD for Media**: Authenticated users can Create, Read, Update, and Delete their own media entries[cite: 11].
--   [cite_start]**Admin Approval Workflow**: New entries submitted by users are set to a 'pending' state and are only visible to others after an admin approves them[cite: 11]. [cite_start]Users can see the status of their own submissions[cite: 11].
--   [cite_start]**Dynamic Data Table with Infinite Scroll**: Media entries are displayed in a responsive table that loads more data as the user scrolls[cite: 11].
--   [cite_start]**Cloud Image Uploads**: Supports uploading poster images for entries, which are stored securely in Cloudinary[cite: 11].
--   **Client-Side Validation**: Forms use Zod for instant user feedback, improving the user experience.
--   [cite_start]**API Documentation**: A live, interactive Swagger/OpenAPI documentation for the backend API[cite: 7].
+### 🎬 Demo Credentials
 
-## Tech Stack
+- **Admin Account**:
+  - Email: `admin@example.com`
+  - Password: `password123`
+- **Test User Account**:
+  - Email: `user@example.com`
+  - Password: `password123`
 
-### Frontend
--   **Framework**: React.js (with Vite)
--   **Styling**: Tailwind CSS
--   **State Management**: Zustand
--   **Data Fetching**: TanStack Query (React Query)
--   **Routing**: React Router
--   **Tables**: TanStack Table (Headless)
+---
 
-### Backend
--   **Framework**: Node.js with Express.js
--   **Database**: MongoDB with Mongoose ODM
--   **Authentication**: JSON Web Tokens (JWT)
--   **File Uploads**: Cloudinary for object storage, Multer for handling multipart/form-data.
--   **Validation**: Zod for API request validation.
+## ✨ Features
 
-### DevOps
--   [cite_start]**Containerization**: Docker, Docker Compose 
--   [cite_start]**CI/CD**: (Placeholder for GitHub Actions setup) [cite: 8]
+### Core Functionality
+- **Full CRUD Operations**: Authenticated users can create, read, update, and delete their own media entries, while admins have full control over all entries.
+- **Admin Approval Workflow**: New entries submitted by regular users are held in a `pending` state and are only publicly visible after an administrator approves them.
+- **Dynamic Data Table**: Media entries are displayed in a responsive table with infinite scroll for a smooth user experience.
+- **Role-Based Permissions**: Users can only edit or delete entries they have created, while admins have full control over all entries.
 
-## Project Structure
+### Advanced Features
+- **Secure JWT Authentication**: Complete user registration and login system using JSON Web Tokens, with sessions persisted in local storage.
+- **Role-Based Access Control**: Differentiates between `admin` (full access) and `user` roles to manage permissions.
+- **Advanced Filtering & Search**: The dashboard includes controls to filter entries by type, industry, and search by keywords.
+- **Shareable Filter Links**: The application state for filters is persisted in the URL, allowing users to share links to specific views.
+- **API Documentation**: A live, interactive Swagger/OpenAPI documentation is served directly from the backend.
+- **Containerized Environment**: The entire application stack (frontend, backend, database) can be launched with a single Docker Compose command.
+- **CI/CD Pipeline**: A GitHub Actions workflow is set up to automatically run tests on every pull request, ensuring code quality.
 
-This project uses a monorepo structure, with two distinct applications in the `backend` and `frontend` directories.
+---
 
-```
-/
-├── backend/        # Node.js Express API
-├── frontend/       # React.js Client Application
-└── README.md       # This file
-```
+## 🛠 Tech Stack
 
-## [cite_start]Local Setup Instructions [cite: 3]
+| Area            | Technology |
+|-----------------|------------|
+| **Frontend**    | React.js (Vite), Tailwind CSS, Zustand, TanStack Query, TanStack Table, React Router |
+| **Backend**     | Node.js, Express.js |
+| **Database**    | MongoDB with Mongoose |
+| **Authentication** | JSON Web Tokens (JWT), bcryptjs |
+| **Validation**  | Zod (Client-side & Server-side) |
+| **DevOps**      | Docker, Docker Compose, GitHub Actions |
+| **Testing**     | Jest, Supertest (Backend), React Testing Library (Frontend) |
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
--   Node.js (v18 or later)
--   npm / yarn
--   MongoDB instance (local or a free Atlas account)
--   A free Cloudinary account for image uploads.
+- Node.js (v18 or later)
+- npm or yarn
+- Docker & Docker Compose (for containerized setup)
+- A free MongoDB Atlas account (or a local MongoDB instance)
 
-### 1. Clone the Repository
-```sh
-git clone <your-repo-url>
-cd <your-repo-name>
-```
+---
 
-### 2. Backend Setup
+## ⚡ Setup Instructions
+
+### 1. Local Environment Setup
+
+#### Backend
 ```sh
-# Navigate to the backend directory
+# 1. Navigate to the backend directory
 cd backend
 
-# Install dependencies
+# 2. Install dependencies
 npm install
 
-# Create the environment file
+# 3. Create the environment file
 cp .env.example .env
-```
-Now, open the `.env` file and add your credentials for `MONGO_URI`, `JWT_SECRET`, and your Cloudinary account.
+Now, open the newly created .env file and add your credentials for MONGO_URI, JWT_SECRET, and the default admin credentials for the seeder.
 
-```sh
-# Start the backend server
+sh
+Copy code
+# 4. Start the backend server
 npm start
-```
-The backend will be running on `http://localhost:5001`.
+The backend will be running on:
+👉 http://localhost:5001
 
-### 3. Frontend Setup
-Open a **new terminal** for the frontend.
-```sh
-# Navigate to the frontend directory from the root
+Frontend
+Open a new terminal for the frontend.
+
+sh
+Copy code
+# 1. Navigate to the frontend directory
 cd frontend
 
-# Install dependencies
+# 2. Install dependencies
 npm install
-```
-Create a `.env` file in the `frontend` directory and add the following variable, pointing to your running backend.
-```env
+
+# 3. Create the environment file
+# Create a new .env file in the /frontend directory and add the following:
 VITE_API_BASE_URL=http://localhost:5001
-```
-```sh
-# Start the frontend development server
+
+# 4. Start the frontend development server
 npm run dev
-```
-The frontend will be running on `http://localhost:5173`.
+The frontend will be running on:
+👉 http://localhost:5173
 
-## [cite_start]Docker Setup [cite: 3]
+2. Docker Environment Setup
+This is the recommended method for a quick and consistent setup.
 
-A `docker-compose.yml` file is provided for a streamlined setup (pending creation). To run the entire stack with Docker:
-1.  Ensure you have Docker and Docker Compose installed.
-2.  Complete the `.env` file setup for the backend as described above.
-3.  From the root directory, run:
-    ```sh
-    docker-compose up --build
-    ```
+sh
+Copy code
+# Clone the repository
+git clone <your-repo-url>
+cd project-root
+Ensure you have a .env file in the backend directory with your JWT_SECRET defined.
 
-## [cite_start]API Documentation [cite: 7]
+From the root directory of the project, run:
 
-The backend includes interactive API documentation served by Swagger. Once the backend server is running, you can access it at:
+sh
+Copy code
+docker-compose up --build
+This command will build the images for the frontend and backend, and start all three services.
 
-[**http://localhost:5001/api-docs**](http://localhost:5001/api-docs)
+Frontend → http://localhost
 
-## [cite_start]Database Schema [cite: 4]
+Backend API → http://localhost:5001
 
-The application uses Mongoose for schema-on-read with MongoDB. The primary collections are `users` and `mediaEntries`. (Refer to the code in `backend/src/models/` for detailed schema definitions).
+📦 Database Schema and Seeding
+The application uses Mongoose for schema management.
+Schema definitions can be found in:
 
-## [cite_start]Testing & CI/CD Instructions [cite: 8]
+bash
+Copy code
+backend/src/models/
+To populate the database with a default admin user and sample data, run the seeder script:
 
--   **Backend Testing**: Navigate to the `backend` directory and run `npm test`. (Jest test suites are to be implemented).
--   **Frontend Testing**: Navigate to the `frontend` directory and run `npm test`. (React Testing Library tests are to be implemented).
--   **CI/CD**: A GitHub Actions workflow is planned for running tests and linting automatically on pull requests.
+⚠️ Note: This will wipe all existing data.
 
-## [cite_start]Demo Credentials & Live Demo [cite: 9]
+sh
+Copy code
+# Run this command from the /backend directory
+npm run seed
+📑 API Documentation
+The backend includes interactive API documentation served by Swagger UI.
+Once the backend server is running, access it at:
 
--   **Live Demo Link**: (Placeholder for your deployed application link)
--   **Demo Credentials**:
-    -   **User Role**: Register a new account through the UI.
-    -   **Admin Role**: After registering a user, manually update their `role` in the MongoDB `users` collection from `'user'` to `'admin'`.
+👉 http://localhost:5001/api-docs
 
-## API Usage & Testing Examples (Postman)
+🧪 Testing & Continuous Integration
+Running Tests
+Backend Tests:
 
-Here are Postman examples demonstrating the core authentication flow.
+sh
+Copy code
+cd backend
+npm test
+Frontend Tests (setup pending):
 
-### 1. User Registration
+sh
+Copy code
+cd frontend
+npm test
+Continuous Integration (CI)
+A GitHub Actions workflow is configured at:
 
-A new user is created by sending a `POST` request to the `/auth/register` endpoint.
+bash
+Copy code
+.github/workflows/ci.yml
+This workflow automatically runs the backend test suite on every push and pull request to the main branch to ensure code integrity.
 
-![Successful User Registration](img/img-1.png)
-
-### 2. User Login
-
-A registered user can log in via the `POST /auth/login` endpoint to receive a JWT access token.
-
-![Successful User Login](img/img-2.png)
-
-### 3. Accessing Protected Routes (Failure)
-
-Attempting to access a protected route like `GET /users/me` without providing a valid Bearer Token results in a `401 Unauthorized` error, as expected.
-
-![Protected Route Failure](img/img-3.png)
-
-### 4. Accessing Protected Routes (Success)
-
-Providing the JWT as a Bearer Token in the Authorization header grants access to protected routes.
-
-![Protected Route Success](img/img-4.png)
+pgsql
+Copy code

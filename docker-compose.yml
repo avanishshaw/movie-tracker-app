@@ -1,0 +1,41 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # Backend Service
+  backend:
+    build: ./backend
+    container_name: movie-tracker-backend
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      # We pass the environment variables from a file
+      - MONGO_URI=mongodb://mongo:27017/movie-tracker
+      - PORT=5001
+      - JWT_SECRET=${JWT_SECRET} # This will be read from your .env file
+    depends_on:
+      - mongo # The backend won't start until the mongo service is ready
+
+  # Frontend Service
+  frontend:
+    build: ./frontend
+    container_name: movie-tracker-frontend
+    restart: always
+    ports:
+      - "80:80" # We map the container's port 80 to our machine's port 80
+    depends_on:
+      - backend # The frontend won't start until the backend is ready
+
+  # MongoDB Database Service
+  mongo:
+    image: mongo:latest
+    container_name: movie-tracker-db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
