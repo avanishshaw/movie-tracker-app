@@ -1,21 +1,18 @@
 // src/services/authService.js
-import axios from 'axios';
+import api from './api'; // Import the central api instance
 
-// Set up the base URL for our backend API
-const API_URL = 'http://localhost:5001/api/v1/auth';
-
-const api = axios.create({
-  baseURL: API_URL,
-});
+// No need for a separate API_URL here anymore
 
 // Function to register a user
 export const registerUser = async (userData) => {
-  const response = await api.post('/register', userData);
+  // Use the imported api instance
+  const response = await api.post('/auth/register', userData);
   return response.data;
 };
 
 // Function to log in a user
 export const loginUser = async (userData) => {
-  const response = await api.post('/login', userData);
+  // Use the imported api instance
+  const response = await api.post('/auth/login', userData);
   return response.data;
 };
