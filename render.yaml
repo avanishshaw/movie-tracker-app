@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: cinematracker-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_ORIGIN
+        sync: false
+
+  - type: web
+    name: cinematracker-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          name: cinematracker-backend
+          type: web
+          property: url
+        value: /api/v1
+      - key: VITE_AUTH_API_URL
+        fromService:
+          name: cinematracker-backend
+          type: web
+          property: url
+        value: /api/v1/auth
