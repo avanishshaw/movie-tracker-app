@@ -18,11 +18,11 @@ if (process.env.NODE_ENV !== 'test') {
   connectDB();
 }
 
-// Middleware and DB Connection
-app.use(cors({
+// CORS configuration
+const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = (process.env.FRONTEND_ORIGIN || 'http://localhost:5173').split(',');
-    // Allow requests with no origin like mobile apps or curl
+    // Allow requests with no origin like Postman or mobile apps
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
@@ -31,7 +31,11 @@ app.use(cors({
     }
   },
   credentials: true,
-}));
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // handle preflight requests
+
 app.use(express.json());
 
 // Routes
