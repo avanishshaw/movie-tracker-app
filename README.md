@@ -5,8 +5,8 @@ The application is built with a modern tech stack and follows industry best prac
 
 ### 🔗 Important Links
 
-- **Frontend**: [https://movie-tracker-app-roan.vercel.app/](https://movie-tracker-app-roan.vercel.app/)
-- **Backend API**: [Add your backend API URL here]
+- **Frontend**: [https://try-cine-track.vercel.app/](https://try-cine-track.vercel.app/)
+- **Backend API**: [https://movie-backend-lus8.onrender.com/](https://movie-backend-lus8.onrender.com/)
 - **GitHub Repository**: [https://github.com/avanishshaw/movie-tracker-app](https://github.com/avanishshaw/movie-tracker-app)
 - **API Documentation**: [Add your Swagger docs URL here]
 
@@ -80,18 +80,17 @@ npm install
 cp .env.example .env
 Now, open the newly created .env file and add your credentials for MONGO_URI, JWT_SECRET, and the default admin credentials for the seeder.
 
-sh
-Copy code
 # 4. Start the backend server
 npm start
 The backend will be running on:
 👉 http://localhost:5001
+```
 
+```sh
 Frontend
 Open a new terminal for the frontend.
 
-sh
-Copy code
+
 # 1. Navigate to the frontend directory
 cd frontend
 
@@ -110,21 +109,24 @@ The frontend will be running on:
 2. Docker Environment Setup
 This is the recommended method for a quick and consistent setup.
 
-sh
-Copy code
+```
+
+
 # Clone the repository
-git clone <your-repo-url>
+```sh
+git clone
+https://github.com/avanishshaw/movie-tracker-app
+```
+```sh
 cd project-root
 Ensure you have a .env file in the backend directory with your JWT_SECRET defined.
-
+```
 From the root directory of the project, run:
-
-sh
-Copy code
+```sh
 docker-compose up --build
 This command will build the images for the frontend and backend, and start all three services.
 
-Frontend → http://localhost
+Frontend → http://localhost:
 
 Backend API → http://localhost:5001
 
@@ -152,24 +154,3 @@ Once the backend server is running, access it at:
 🧪 Testing & Continuous Integration
 Running Tests
 Backend Tests:
-
-sh
-Copy code
-cd backend
-npm test
-Frontend Tests (setup pending):
-
-sh
-Copy code
-cd frontend
-npm test
-Continuous Integration (CI)
-A GitHub Actions workflow is configured at:
-
-bash
-Copy code
-.github/workflows/ci.yml
-This workflow automatically runs the backend test suite on every push and pull request to the main branch to ensure code integrity.
-
-pgsql
-Copy code
