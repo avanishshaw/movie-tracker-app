@@ -19,9 +19,17 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 // Middleware and DB Connection
-// connectDB();
 app.use(cors({
-  origin: process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    const allowedOrigins = (process.env.FRONTEND_ORIGIN || 'http://localhost:5173').split(',');
+    // Allow requests with no origin like mobile apps or curl
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
