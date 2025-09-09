@@ -54,103 +54,111 @@ The application is built with a modern tech stack and follows industry best prac
 
 ---
 
-## 🚀 Getting Started
+# 🚀 Getting Started
 
-### Prerequisites
-- Node.js (v18 or later)
-- npm or yarn
-- Docker & Docker Compose (for containerized setup)
-- A free MongoDB Atlas account (or a local MongoDB instance)
+## Prerequisites
+- **Node.js** (v18 or later)
+- **npm** or **yarn**
+- **Docker & Docker Compose** (for containerized setup)
+- **A free MongoDB Atlas account** (or a local MongoDB instance)
 
----
+***
 
 ## ⚡ Setup Instructions
 
 ### 1. Local Environment Setup
 
-#### Backend
-```sh
-# 1. Navigate to the backend directory
-cd backend
+### Backend
 
-# 2. Install dependencies
-npm install
+1. **Navigate to the backend directory**
+    ```
+    cd backend
+    ```
 
-# 3. Create the environment file
-cp .env.example .env
-Now, open the newly created .env file and add your credentials for MONGO_URI, JWT_SECRET, and the default admin credentials for the seeder.
+2. **Install dependencies**
+    ```
+    npm install
+    ```
 
-# 4. Start the backend server
-npm start
-The backend will be running on:
-👉 http://localhost:5001
+3. **Create the environment file**
+    ```
+    cp .env.example .env
+    ```
+    Now, open the newly created `.env` file and add your credentials for `MONGO_URI`, `JWT_SECRET`, and the default admin credentials for the seeder.
+
+4. **Start the backend server**
+    ```
+    npm start
+    ```
+
+    The backend will be running on:  
+    👉 http://localhost:5001
+
+### Frontend
+
+1. **Navigate to the frontend directory**
+    ```
+    cd frontend
+    ```
+
+2. **Install dependencies**
+    ```
+    npm install
+    ```
+
+3. **Create the environment file**  
+    Create a new `.env` file in the `/frontend` directory and add the following:
+    ```
+    VITE_API_BASE_URL=http://localhost:5001
+    ```
+
+4. **Start the frontend development server**
+    ```
+    npm run dev
+    ```
+
+    The frontend will be running on:  
+    👉 http://localhost:5173
+
+### Docker Environment Setup
+
+1. **Clone the repository**
+    ```
+    git clone https://github.com/avanishshaw/movie-tracker-app
+    cd movie-tracker-app
+    ```
+
+2. **Ensure you have a `.env` file**  
+   Make sure there is a `.env` file in the `backend` directory with your `JWT_SECRET` defined.
+
+3. **Build and run all services**
+    ```
+    docker-compose up --build
+    ```
+
+    This command will build Docker images for the frontend and backend, and start all three services for you.
+    
+    - Frontend → http://localhost
+    - Backend API → http://localhost:5001
+
+## 📦 Database Schema and Seeding
+
+The application uses Mongoose for schema management. Schema definitions can be found in `backend/src/models/`.
+
+To populate the database with a default admin user and sample data, run the seeder script.
+
+> ⚠️ Note: This will wipe all existing data.
+
+Run this command from the `/backend` directory:
 ```
-
-```sh
-Frontend
-Open a new terminal for the frontend.
-
-
-# 1. Navigate to the frontend directory
-cd frontend
-
-# 2. Install dependencies
-npm install
-
-# 3. Create the environment file
-# Create a new .env file in the /frontend directory and add the following:
-VITE_API_BASE_URL=http://localhost:5001
-
-# 4. Start the frontend development server
-npm run dev
-The frontend will be running on:
-👉 http://localhost:5173
-
-2. Docker Environment Setup
-This is the recommended method for a quick and consistent setup.
-
-```
-
-
-# Clone the repository
-```sh
-git clone
-https://github.com/avanishshaw/movie-tracker-app
-```
-```sh
-cd project-root
-Ensure you have a .env file in the backend directory with your JWT_SECRET defined.
-```
-From the root directory of the project, run:
-```sh
-docker-compose up --build
-This command will build the images for the frontend and backend, and start all three services.
-
-Frontend → http://localhost:
-
-Backend API → http://localhost:5001
-
-📦 Database Schema and Seeding
-The application uses Mongoose for schema management.
-Schema definitions can be found in:
-
-bash
-Copy code
-backend/src/models/
-To populate the database with a default admin user and sample data, run the seeder script:
-
-⚠️ Note: This will wipe all existing data.
-
-sh
-Copy code
-# Run this command from the /backend directory
 npm run seed
-📑 API Documentation
-The backend includes interactive API documentation served by Swagger UI.
-Once the backend server is running, access it at:
+```
 
+## 📑 API Documentation
+
+The backend includes interactive API documentation served by Swagger UI. Once the backend server is running, access it at:  
 👉 http://localhost:5001/api-docs
 
-🧪 Testing & Continuous Integration
-Running Tests
-Backend Tests:
+
+Continuous Integration (CI)
+A GitHub Actions workflow is configured at .github/workflows/ci.yml. This workflow automatically runs the backend test suite on every push and pull request to the main branch to ensure code integrity.
